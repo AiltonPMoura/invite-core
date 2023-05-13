@@ -1,4 +1,4 @@
-package br.com.up.invitecore.domain;
+package br.com.up.invitecore.domains;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +38,10 @@ public class Invite {
 	@Column(name = "TYPE")
 	@Enumerated(EnumType.ORDINAL)
 	private InviteType type;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_USER")
+	private User user;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_EVENT")
