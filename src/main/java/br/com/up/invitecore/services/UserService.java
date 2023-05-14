@@ -14,12 +14,20 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public UserDTO save(UserDTO user) {
-		return userRepository.save(user.toEntity()).toDTO();
+	public User save(UserDTO user) {
+		return userRepository.save(user.toEntity());
 	}
 
-	public UserDTO findById(Long id) {
-		return userRepository.findById(id).map(User::toDTO)
+	public User findById(Long id) {
+		return userRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("User not found by id"));
 	}
+
+	public User update(UserDTO user, Long id) {
+		var userEntity = findById(id);
+		userEntity.setName(user.getName());
+		userEntity.setUriImage(user.getUriImage());
+		return userRepository.save(userEntity);
+	}
+
 }

@@ -13,6 +13,17 @@ import br.com.up.invitecore.exceptions.NotFoundException;
 
 @ControllerAdvice
 public class ResponseEntityExceptionHandler {
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ExceptionResponse> InternalServerErrorException(Exception ex, WebRequest request) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(ExceptionResponse.builder()
+						.dateTime(LocalDateTime.now())
+						.message(ex.getMessage())
+						.details(request.getDescription(false))
+						.build()
+				);
+	}
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<ExceptionResponse> notFoundException(Exception ex, WebRequest request) {

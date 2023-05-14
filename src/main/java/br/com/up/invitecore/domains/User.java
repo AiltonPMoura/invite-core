@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -42,10 +40,7 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Invite> invites;
 	
-	@OneToMany
-	@JoinTable(name = "TB_USER_CONTACT",
-			joinColumns = @JoinColumn(name = "ID_USER"),
-			inverseJoinColumns = @JoinColumn(name = "ID_CONTACT"))
+	@OneToMany(mappedBy = "user")
 	private List<Contact> contacts;
 	
 	public UserDTO toDTO() {

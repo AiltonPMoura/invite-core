@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +22,17 @@ public class UserController {
 	
 	@PostMapping("/save")
 	public ResponseEntity<UserDTO> save(@RequestBody UserDTO user) {
-		return ResponseEntity.ok(userService.save(user));
+		return ResponseEntity.ok(userService.save(user).toDTO());
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
-		return ResponseEntity.ok(userService.findById(id));
+		return ResponseEntity.ok(userService.findById(id).toDTO());
+	}
+	
+	@PutMapping("/update/{id}")
+	public ResponseEntity<UserDTO> update(@RequestBody UserDTO user, @PathVariable Long id) {
+		return ResponseEntity.ok(userService.update(user, id).toDTO());
 	}
 
 }
