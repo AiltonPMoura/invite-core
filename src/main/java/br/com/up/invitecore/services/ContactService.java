@@ -59,7 +59,7 @@ public class ContactService {
 		contactEntity.setUriImage(contact.getUriImage());
 		contactEntity.setId(id);
 		
-		return contactEntity;
+		return contactRepository.save(contactEntity);
 	}
 
 }

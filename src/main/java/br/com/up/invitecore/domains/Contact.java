@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -25,7 +24,6 @@ public class Contact {
 	@EmbeddedId
 	private UserContactId id;
 
-	@Id
 	@Column(name = "NAME")
 	private String name;
 	
@@ -33,7 +31,7 @@ public class Contact {
 	private String uriImage;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_USER")
+	@JoinColumn(name = "ID_USER", insertable = false, updatable = false)
 	private User user;
 	
 	public ContactDTO toDTO() {
@@ -43,9 +41,11 @@ public class Contact {
 	}
 	
 	public static List<ContactDTO> toListDTO(List<Contact> contacts) {
-		return contacts.stream()
-				.map(Contact::toDTO)
-				.collect(Collectors.toList());
+		if (contacts != null)
+			return contacts.stream()
+					.map(Contact::toDTO)
+					.collect(Collectors.toList());
+		else return null;
 	}
 	
 }

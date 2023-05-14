@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 
 import br.com.up.invitecore.dto.UserDTO;
 import lombok.Data;
@@ -44,6 +45,13 @@ public class User {
 	private List<Contact> contacts;
 	
 	public UserDTO toDTO() {
-		return new ModelMapper().map(this, UserDTO.class);
+		var mapper = new ModelMapper();
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		var user = mapper.map(this, UserDTO.class);
+		user.setContacts(Contact.toListDTO(this.getContacts()));
+		
+		return user;
+		
 	}
 }

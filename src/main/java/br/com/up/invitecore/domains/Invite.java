@@ -50,7 +50,7 @@ public class Invite {
 	@OneToMany
 	@JoinTable(name = "TB_INVITE_CONTACT", 
 		joinColumns = @JoinColumn(name = "ID_INVITE"),
-		inverseJoinColumns = @JoinColumn(name = "ID_CONTACT"))
+		inverseJoinColumns = {@JoinColumn(name = "CEL_PHONE"), @JoinColumn(name = "ID_USER")})
 	private List<Contact> guests;
 
 }
