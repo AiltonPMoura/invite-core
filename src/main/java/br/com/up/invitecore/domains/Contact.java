@@ -14,9 +14,15 @@ import org.modelmapper.ModelMapper;
 
 import br.com.up.invitecore.domains.id.UserContactId;
 import br.com.up.invitecore.dto.ContactDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "TB_CONTACT")
 public class Contact {

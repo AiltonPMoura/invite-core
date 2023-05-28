@@ -5,9 +5,11 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 
 import br.com.up.invitecore.domains.User;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class UserDTO {
 	
 	private Long id;

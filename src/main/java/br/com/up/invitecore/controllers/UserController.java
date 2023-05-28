@@ -1,6 +1,7 @@
 package br.com.up.invitecore.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,8 @@ public class UserController {
 	
 	@PostMapping("/save")
 	public ResponseEntity<UserDTO> save(@RequestBody UserDTO user) {
-		return ResponseEntity.ok(userService.save(user).toDTO());
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(userService.save(user).toDTO());
 	}
 	
 	@GetMapping("/findById/{id}")

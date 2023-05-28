@@ -3,6 +3,7 @@ package br.com.up.invitecore.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,8 @@ public class ContactController {
 	
 	@PostMapping("/save/{idUser}")
 	public ResponseEntity<ContactDTO> save(@RequestBody ContactDTO contact, @PathVariable Long idUser) {
-		return ResponseEntity.ok(contactService.save(contact, idUser).toDTO());
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(contactService.save(contact, idUser).toDTO());
 	}
 	
 	@GetMapping("/findById/{celPhone}/{idUser}")
