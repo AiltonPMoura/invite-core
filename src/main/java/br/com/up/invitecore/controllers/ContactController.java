@@ -1,5 +1,7 @@
 package br.com.up.invitecore.controllers;
 
+import static br.com.up.invitecore.domains.Contact.toListDTO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.up.invitecore.domains.Contact;
 import br.com.up.invitecore.dto.ContactDTO;
 import br.com.up.invitecore.services.ContactService;
 
@@ -37,7 +38,7 @@ public class ContactController {
 	
 	@GetMapping("/findAllByUserId/{idUser}")
 	public ResponseEntity<List<ContactDTO>> findAllByUserId(@PathVariable Long idUser) {
-		return ResponseEntity.ok(Contact.toListDTO(contactService.findAllByUserId(idUser)));
+		return ResponseEntity.ok(toListDTO(contactService.findAllByUserId(idUser)));
 	}
 	
 	@PutMapping("/update/{celPhone}/{idUser}")
