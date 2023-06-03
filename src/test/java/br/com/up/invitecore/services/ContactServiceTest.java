@@ -39,11 +39,12 @@ public class ContactServiceTest {
 		var contactDTO = getContactDTO();
 		var contactEntity = getContactEntity();
 		var userEntity = getUserEntity();
+		userEntity.setId(1L);
 		
-		when(userService.findById(1L)).thenReturn(userEntity);
+		when(userService.find(1L)).thenReturn(userEntity);
 		when(contactRepository.save(contactEntity)).thenReturn(contactEntity);
 		
-		Contact contact = contactService.save(contactDTO, 1L);
+		Contact contact = contactService.create(contactDTO);
 		
 		assertEquals(contactEntity, contact);
 	}
@@ -52,14 +53,15 @@ public class ContactServiceTest {
 	public void createContact_WithInvalidData_ReturnThroesException() {		
 		var contactDTO = getContactDTO();
 		
-		when(userService.findById(1L)).thenThrow(NotFoundException.class);
+		when(userService.find(1L)).thenThrow(NotFoundException.class);
 		
-		assertThrows(NotFoundException.class, () -> contactService.save(contactDTO, 1L));
+		assertThrows(NotFoundException.class, () -> contactService.create(contactDTO));
 	}
 
 	@Test
 	void findById_WithValidData_ThenReturnContact() {
 		var contactEntity = getContactEntity();
+		
 		String celPhone = "+5511922223333";
 		Long idUser = 1L;
 		
@@ -70,7 +72,7 @@ public class ContactServiceTest {
 		
 		when(contactRepository.findById(id)).thenReturn(Optional.of(contactEntity));
 		
-		var contact = contactService.findById(celPhone, 1L);
+		var contact = contactService.find(celPhone, 1L);
 		
 		assertEquals(contactEntity, contact);
 	}
@@ -86,7 +88,7 @@ public class ContactServiceTest {
 		
 		when(contactRepository.findById(id)).thenThrow(NotFoundException.class);
 		
-		assertThrows(NotFoundException.class, () -> contactService.findById(celPhone, 99L));
+		assertThrows(NotFoundException.class, () -> contactService.find(celPhone, 99L));
 	}
 
 	@Test
@@ -113,37 +115,31 @@ public class ContactServiceTest {
 	void updateContact_WithValidData_ThenReturnContact() {
 		var contactDTO = getContactDTO();
 		var contactEntity = getContactEntity();
-		var userEntity = getUserEntity();
-		String celPhone = "+5511922223333";
-		Long idUser = 1L;
 		
 		var id = UserContactId.builder()
-				.celPhone(celPhone)
-				.idUser(idUser)
+				.celPhone(contactDTO.getCelPhone())
+				.idUser(contactDTO.getIdUser())
 				.build();
 		
 		when(contactRepository.findById(id)).thenReturn(Optional.of(contactEntity));
-		when(userService.findById(1L)).thenReturn(userEntity);
 		when(contactRepository.save(contactEntity)).thenReturn(contactEntity);
 		
-		var contact = contactService.update(contactDTO, celPhone, idUser);
+		var contact = contactService.update(contactDTO);
 		
 		assertEquals(contactEntity, contact);
 	}
 	
 	public void updateContact_WithInvalidaData_ThenThrows() {
 		var contactDTO = getContactDTO();
-		String celPhone = "+5511922223333";
-		Long idUser = 1L;
 		
 		var id = UserContactId.builder()
-				.celPhone(celPhone)
-				.idUser(idUser)
+				.celPhone(contactDTO.getCelPhone())
+				.idUser(contactDTO.getIdUser())
 				.build();
 		
 		when(contactRepository.findById(id)).thenThrow(NotFoundException.class);
 		
-		assertThrows(NotFoundException.class, () -> contactService.update(contactDTO, celPhone, idUser));
+		assertThrows(NotFoundException.class, () -> contactService.update(contactDTO));
 	}
 
 }

@@ -18,13 +18,13 @@ public class UserService {
 		return userRepository.save(user.toEntity());
 	}
 
-	public User findById(Long id) {
+	public User find(Long id) {
 		return userRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("User not found by id"));
 	}
 
 	public User update(UserDTO user, Long id) {
-		var userEntity = findById(id);
+		var userEntity = find(id);
 		userEntity.setName(user.getName());
 		userEntity.setUriImage(user.getUriImage());
 		return userRepository.save(userEntity);

@@ -25,26 +25,25 @@ public class ContactController {
 	@Autowired
 	private ContactService contactService;
 	
-	@PostMapping("/save/{idUser}")
-	public ResponseEntity<ContactDTO> save(@RequestBody ContactDTO contact, @PathVariable Long idUser) {
+	@PostMapping("/create")
+	public ResponseEntity<ContactDTO> create(@RequestBody ContactDTO contact) {
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(contactService.save(contact, idUser).toDTO());
+				.body(contactService.create(contact).toDTO());
 	}
 	
-	@GetMapping("/findById/{celPhone}/{idUser}")
-	public ResponseEntity<ContactDTO> findById(@PathVariable String celPhone, @PathVariable Long idUser) {
-		return ResponseEntity.ok(contactService.findById(celPhone, idUser).toDTO());
+	@GetMapping("/find/{celPhone}/{idUser}")
+	public ResponseEntity<ContactDTO> find(@PathVariable String celPhone, @PathVariable Long idUser) {
+		return ResponseEntity.ok(contactService.find(celPhone, idUser).toDTO());
 	}
 	
-	@GetMapping("/findAllByUserId/{idUser}")
-	public ResponseEntity<List<ContactDTO>> findAllByUserId(@PathVariable Long idUser) {
+	@GetMapping("/findAll/{idUser}")
+	public ResponseEntity<List<ContactDTO>> findAll(@PathVariable Long idUser) {
 		return ResponseEntity.ok(toListDTO(contactService.findAllByUserId(idUser)));
 	}
 	
-	@PutMapping("/update/{celPhone}/{idUser}")
-	public ResponseEntity<ContactDTO> update(@RequestBody ContactDTO contact, 
-			@PathVariable String celPhone, @PathVariable Long idUser) {
-		return ResponseEntity.ok(contactService.update(contact, celPhone, idUser).toDTO());
+	@PutMapping("/update")
+	public ResponseEntity<ContactDTO> update(@RequestBody ContactDTO contact) {
+		return ResponseEntity.ok(contactService.update(contact).toDTO());
 	}
 	
 }

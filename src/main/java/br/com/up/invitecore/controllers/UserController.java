@@ -21,15 +21,15 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping("/save")
-	public ResponseEntity<UserDTO> save(@RequestBody UserDTO user) {
+	@PostMapping("/create")
+	public ResponseEntity<UserDTO> create(@RequestBody UserDTO user) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(userService.save(user).toDTO());
 	}
 	
-	@GetMapping("/findById/{id}")
-	public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
-		return ResponseEntity.ok(userService.findById(id).toDTO());
+	@GetMapping("/find/{id}")
+	public ResponseEntity<UserDTO> find(@PathVariable Long id) {
+		return ResponseEntity.ok(userService.find(id).toDTO());
 	}
 	
 	@PutMapping("/update/{id}")

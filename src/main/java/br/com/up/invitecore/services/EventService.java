@@ -19,7 +19,7 @@ public class EventService {
 	private UserService userService;
 
 	public Event create(EventDTO event) {
-		var user = userService.findById(event.getIdUser());
+		var user = userService.find(event.getIdUser());
 		return eventRepository.save(event.toEntity(user));
 	}
 
@@ -29,7 +29,7 @@ public class EventService {
 	}
 
 	public List<Event> findAll(Long idUser) {
-		var user = userService.findById(idUser);
+		var user = userService.find(idUser);
 		return eventRepository.findAllByUserId(user.getId());
 	}
 

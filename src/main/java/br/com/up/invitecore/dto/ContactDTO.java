@@ -19,9 +19,16 @@ public class ContactDTO {
 	private String name;
 	private String celPhone;
 	private String uriImage;
+	private Long idUser;
 	
-	public Contact toEntity(UserContactId id, User user) {
+	public Contact toEntity(User user) {
 		var contact = new ModelMapper().map(this, Contact.class);
+		
+		var id = UserContactId.builder()
+				.celPhone(this.getCelPhone())
+				.idUser(user.getId())
+				.build();
+		
 		contact.setId(id);
 		contact.setUser(user);
 		return contact;

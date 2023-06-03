@@ -20,18 +20,12 @@ public class ContactService {
 	@Autowired
 	private UserService userService;
 
-	public Contact save(ContactDTO contact, Long idUser) {
-		var user = userService.findById(idUser);
-		
-		var id = UserContactId.builder()
-				.celPhone(contact.getCelPhone())
-				.idUser(user.getId())
-				.build();
-		
-		return contactRepository.save(contact.toEntity(id, user));
+	public Contact create(ContactDTO contact) {
+		var user = userService.find(contact.getIdUser());
+		return contactRepository.save(contact.toEntity(user));
 	}
 
-	public Contact findById(String celPhone, Long idUser) {
+	public Contact find(String celPhone, Long idUser) {
 		var id = UserContactId.builder()
 				.celPhone(celPhone)
 				.idUser(idUser)
@@ -45,19 +39,11 @@ public class ContactService {
 		return contactRepository.findAllByUserId(idUser);
 	}
 
-	public Contact update(ContactDTO contact, String celPhone, Long idUser) {
-		var contactEntity = findById(celPhone, idUser);
-		
-		var user = userService.findById(idUser);
-		
-		var id = UserContactId.builder()
-				.celPhone(contact.getCelPhone())
-				.idUser(user.getId())
-				.build();
+	public Contact update(ContactDTO contact) {
+		var contactEntity = find(contact.getCelPhone(), contact.getIdUser());
 		
 		contactEntity.setName(contact.getName());
 		contactEntity.setUriImage(contact.getUriImage());
-		contactEntity.setId(id);
 		
 		return contactRepository.save(contactEntity);
 	}

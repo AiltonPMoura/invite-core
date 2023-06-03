@@ -43,6 +43,7 @@ public class Contact {
 	public ContactDTO toDTO() {
 		var contact = new ModelMapper().map(this, ContactDTO.class);
 		contact.setCelPhone(this.getId().getCelPhone());
+		contact.setIdUser(this.getId().getIdUser());
 		return contact;
 	}
 	

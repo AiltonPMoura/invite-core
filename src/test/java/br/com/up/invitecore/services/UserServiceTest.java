@@ -53,7 +53,8 @@ public class UserServiceTest {
 		var userEntity = getUserEntity();
 		
 		when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
-		var user = userService.findById(1L);
+		
+		var user = userService.find(1L);
 		
 		assertEquals(userEntity, user);
 	}
@@ -62,7 +63,7 @@ public class UserServiceTest {
 	public void findById_WithUnexisting_ReturnsThrowsException() {
 		when(userRepository.findById(99L)).thenThrow(NotFoundException.class);
 
-		assertThrows(NotFoundException.class, () -> userService.findById(99L));
+		assertThrows(NotFoundException.class, () -> userService.find(99L));
 	}
 
 	@Test

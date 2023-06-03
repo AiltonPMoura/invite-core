@@ -27,8 +27,7 @@ public class EventController {
 	private EventService eventService;
 	
 	@PostMapping("/create")
-	public ResponseEntity<EventDTO> create(@RequestBody EventDTO event,
-			@PathVariable Long idUser) {
+	public ResponseEntity<EventDTO> create(@RequestBody EventDTO event) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(eventService.create(event).toDTO());
 	}
