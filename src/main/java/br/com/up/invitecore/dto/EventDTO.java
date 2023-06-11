@@ -1,5 +1,7 @@
 package br.com.up.invitecore.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import br.com.up.invitecore.domains.Event;
@@ -9,6 +11,8 @@ import lombok.Data;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventDTO {
 
 	private Long id;

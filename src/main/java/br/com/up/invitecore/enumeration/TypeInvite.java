@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum InviteType {
+public enum TypeInvite {
 	
 	FREE(0),
 	PAY(1);
 	
-	private int type;
+	private Integer type;
 
 }

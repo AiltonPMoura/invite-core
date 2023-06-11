@@ -25,7 +25,7 @@ public class EventService {
 
 	public Event find(Long id) {
 		return eventRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("Not found by id"));
+				.orElseThrow(() -> new NotFoundException("Event not found by id"));
 	}
 
 	public List<Event> findAll(Long idUser) {
