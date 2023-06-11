@@ -15,12 +15,16 @@ public class EventService {
 
 	@Autowired
 	private EventRepository eventRepository;
-	
+	@Autowired
 	private UserService userService;
 
 	public Event create(EventDTO event) {
 		var user = userService.find(event.getIdUser());
-		return eventRepository.save(event.toEntity(user));
+
+		var eventEntity = event.toEntity();
+		eventEntity.setUser(user);
+
+		return eventRepository.save(eventEntity);
 	}
 
 	public Event find(Long id) {

@@ -18,7 +18,7 @@ public class ContactMockBuilder {
 				.celPhone("+5511922223333")
 				.uriImage("http://teste.png")
 				.build()
-				.toEntity(user);
+				.toEntity();
 	}
 	
 	public static ContactDTO getContactDTO() {

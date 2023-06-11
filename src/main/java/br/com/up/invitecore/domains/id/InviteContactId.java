@@ -9,11 +9,15 @@ import javax.persistence.ManyToOne;
 
 import br.com.up.invitecore.domains.Contact;
 import br.com.up.invitecore.domains.Invite;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class InviteContactId implements Serializable {
 	

@@ -20,13 +20,8 @@ public class EventDTO {
 	private String uriImage;
 	private Long idUser;
 	
-	public Event toEntity(User user) {
-		ModelMapper mapper = new ModelMapper();
-		
-		var event = mapper.map(this, Event.class);
-		event.setUser(user);
-		
-		return event;
+	public Event toEntity() {
+		return new ModelMapper().map(this, Event.class);
 	}
 
 }

@@ -22,7 +22,16 @@ public class ContactService {
 
 	public Contact create(ContactDTO contact) {
 		var user = userService.find(contact.getIdUser());
-		return contactRepository.save(contact.toEntity(user));
+		var contactEntity = contact.toEntity();
+		var id = UserContactId.builder()
+				.celPhone(contact.getCelPhone())
+				.idUser(user.getId())
+				.build();
+
+		contactEntity.setId(id);
+		contactEntity.setUser(user);
+
+		return contactRepository.save(contactEntity);
 	}
 
 	public Contact find(String celPhone, Long idUser) {
