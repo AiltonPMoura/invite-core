@@ -12,6 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import br.com.up.invitecore.dto.EventDTO;
@@ -19,6 +22,9 @@ import lombok.Data;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "TB_EVENT")
 public class Event {
 
