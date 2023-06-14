@@ -1,5 +1,6 @@
 package br.com.up.invitecore.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,6 +8,7 @@ import br.com.up.invitecore.domains.InviteContact;
 import br.com.up.invitecore.domains.id.InviteContactId;
 import br.com.up.invitecore.enumeration.StatusInvite;
 import br.com.up.invitecore.exceptions.NotFoundException;
+import br.com.up.invitecore.repositories.InviteContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,9 @@ public class InviteService {
 
 	@Autowired
 	private InviteRepository inviteRepository;
+
+	@Autowired
+	private InviteContactRepository inviteContactRepository;
 	
 	@Autowired
 	private UserService userService;
@@ -34,27 +39,28 @@ public class InviteService {
 	public Invite create(InviteDTO invite) {
 		var user = userService.find(invite.getIdUser());
 		var event = eventService.find(invite.getEvent().getId());
-		var typeInvite = invite.getType() == 0 ? TypeInvite.FREE : TypeInvite.PAY;
 
 		var inviteEntity = invite.toEntity();
 		inviteEntity.setUser(user);
 		inviteEntity.setEvent(event);
-		inviteEntity.setType(typeInvite);
+		inviteEntity.setDateTime(LocalDateTime.now().withSecond(0).withNano(0));
+
+		var invitePersist = inviteRepository.save(inviteEntity);
 		
 		List<InviteContact> inviteContacts = invite.getContacts().stream()
 				.map(contact -> contactService.find(contact.getCelPhone(), user.getId()))
 				.map(contact -> InviteContact.builder()
 						.statusInvite(StatusInvite.PENDING)
 						.id(InviteContactId.builder()
-								.invite(inviteEntity)
+								.invite(invitePersist)
 								.contact(contact)
 								.build())
 						.build())
 				.collect(Collectors.toList());
 
-		inviteEntity.setInviteContact(inviteContacts);
+		inviteContactRepository.saveAll(inviteContacts);
 
-		return inviteRepository.save(inviteEntity);
+		return invitePersist;
 	}
 
 	public Invite find(Long id) {

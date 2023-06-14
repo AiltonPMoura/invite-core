@@ -28,7 +28,10 @@ public class InviteDTO {
 	private List<ContactDTO> contacts;
 
 	public Invite toEntity() {
-		return new ModelMapper().map(this, Invite.class);
+		var invite = new ModelMapper().map(this, Invite.class);
+		invite.setType(this.type == 0 ? TypeInvite.FREE : TypeInvite.PAY);
+
+		return invite;
 	}
 
 }

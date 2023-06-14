@@ -3,7 +3,10 @@ package br.com.up.invitecore.domains;
 import br.com.up.invitecore.dto.ContactDTO;
 import br.com.up.invitecore.dto.InviteDTO;
 import br.com.up.invitecore.enumeration.TypeInvite;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
@@ -13,6 +16,9 @@ import java.util.stream.Collectors;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "TB_INVITE")
 public class Invite {
 
@@ -39,7 +45,7 @@ public class Invite {
 	@JoinColumn(name = "ID_EVENT")
 	private Event event;
 
-	@OneToMany(mappedBy = "id.invite", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "id.invite")
 	private List<InviteContact> inviteContact;
 
 	public InviteDTO toDTO() {
