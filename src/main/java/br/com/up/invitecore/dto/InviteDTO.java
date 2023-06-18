@@ -1,18 +1,14 @@
 package br.com.up.invitecore.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import br.com.up.invitecore.domains.Invite;
+import br.com.up.invitecore.enumeration.TypeInvite;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
-import br.com.up.invitecore.domains.Event;
-import br.com.up.invitecore.domains.Invite;
-import br.com.up.invitecore.domains.User;
-import br.com.up.invitecore.enumeration.TypeInvite;
-import lombok.Builder;
-import lombok.Data;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,7 +20,7 @@ public class InviteDTO {
 	private String location;
 	private Integer type;
 	private Long idUser;
-	private EventDTO event;
+	private EventDTO eventDTO;
 	private List<ContactDTO> contacts;
 
 	public Invite toEntity() {

@@ -14,8 +14,8 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public User save(UserDTO user) {
-		return userRepository.save(user.toEntity());
+	public User save(UserDTO userDTO) {
+		return userRepository.save(userDTO.toEntity());
 	}
 
 	public User find(Long id) {
@@ -23,10 +23,10 @@ public class UserService {
 				.orElseThrow(() -> new NotFoundException("User not found by id"));
 	}
 
-	public User update(UserDTO user, Long id) {
+	public User update(UserDTO userDTO, Long id) {
 		var userEntity = find(id);
-		userEntity.setName(user.getName());
-		userEntity.setUriImage(user.getUriImage());
+		userEntity.setName(userDTO.getName());
+		userEntity.setUriImage(userDTO.getUriImage());
 		return userRepository.save(userEntity);
 	}
 

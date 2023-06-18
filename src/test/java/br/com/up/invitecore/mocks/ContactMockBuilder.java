@@ -1,24 +1,27 @@
 package br.com.up.invitecore.mocks;
 
-import static br.com.up.invitecore.mocks.UserMockBuilder.getUserEntity;
-
 import br.com.up.invitecore.domains.Contact;
+import br.com.up.invitecore.domains.id.UserContactId;
 import br.com.up.invitecore.dto.ContactDTO;
+
+import static br.com.up.invitecore.mocks.UserMockBuilder.getUserEntity;
 
 public class ContactMockBuilder {
 	
-	private ContactMockBuilder() {};
+	private ContactMockBuilder() {}
 		
 	public static Contact getContactEntity() {
-		var user = getUserEntity();
-		user.setId(1L);
-		
-		return ContactDTO.builder()
+		var userEntity = getUserEntity();
+		userEntity.setId(1L);
+
+		return Contact.builder()
 				.name("Test")
-				.celPhone("+5511922223333")
 				.uriImage("http://teste.png")
-				.build()
-				.toEntity();
+				.id(UserContactId.builder()
+						.user(userEntity)
+						.celPhone(getContactDTO().getCelPhone())
+						.build())
+				.build();
 	}
 	
 	public static ContactDTO getContactDTO() {

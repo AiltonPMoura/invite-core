@@ -42,6 +42,8 @@ public class UserServiceTest {
 	public void createUser_WithInvalidData_ReturnThrowsException() {
 		var userEntity = getUserEntity();
 		var userDTO = getUserDTO();
+		userDTO.setName(null);
+		userEntity.setName(null);
 		
 		when(userRepository.save(userEntity)).thenThrow(NotFoundException.class);
 		
@@ -70,6 +72,7 @@ public class UserServiceTest {
 	public void updateUser_WithValidData_ReturnUser() {
 		var userEntity = getUserEntity();
 		var userDTO = getUserDTO();
+		userDTO.setName("Name 2");
 		
 		when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
 		when(userRepository.save(userEntity)).thenReturn(userEntity);

@@ -1,24 +1,19 @@
 package br.com.up.invitecore.domains;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.modelmapper.ModelMapper;
-
 import br.com.up.invitecore.domains.id.UserContactId;
 import br.com.up.invitecore.dto.ContactDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -36,15 +31,11 @@ public class Contact {
 	
 	@Column(name = "URI_IMAGE")
 	private String uriImage;
-	
-	@ManyToOne
-	@JoinColumn(name = "ID_USER", insertable = false, updatable = false)
-	private User user;
-	
+
 	public ContactDTO toDTO() {
 		var contact = new ModelMapper().map(this, ContactDTO.class);
 		contact.setCelPhone(this.getId().getCelPhone());
-		contact.setIdUser(this.getId().getIdUser());
+		contact.setIdUser(this.getId().getUser().getId());
 		return contact;
 	}
 	

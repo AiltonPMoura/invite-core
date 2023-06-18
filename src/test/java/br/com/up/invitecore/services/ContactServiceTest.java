@@ -1,26 +1,22 @@
 package br.com.up.invitecore.services;
 
-import static br.com.up.invitecore.mocks.ContactMockBuilder.getContactDTO;
-import static br.com.up.invitecore.mocks.ContactMockBuilder.getContactEntity;
-import static br.com.up.invitecore.mocks.UserMockBuilder.getUserEntity;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Optional;
-
+import br.com.up.invitecore.domains.Contact;
+import br.com.up.invitecore.exceptions.NotFoundException;
+import br.com.up.invitecore.repositories.ContactRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.up.invitecore.domains.Contact;
-import br.com.up.invitecore.domains.id.UserContactId;
-import br.com.up.invitecore.exceptions.NotFoundException;
-import br.com.up.invitecore.repositories.ContactRepository;
+import java.util.List;
+import java.util.Optional;
+
+import static br.com.up.invitecore.mocks.ContactMockBuilder.getContactDTO;
+import static br.com.up.invitecore.mocks.ContactMockBuilder.getContactEntity;
+import static br.com.up.invitecore.mocks.UserMockBuilder.getUserEntity;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ContactServiceTest {
@@ -40,7 +36,7 @@ public class ContactServiceTest {
 		var contactEntity = getContactEntity();
 		var userEntity = getUserEntity();
 		userEntity.setId(1L);
-		
+
 		when(userService.find(1L)).thenReturn(userEntity);
 		when(contactRepository.save(contactEntity)).thenReturn(contactEntity);
 		
@@ -52,50 +48,46 @@ public class ContactServiceTest {
 	@Test
 	public void createContact_WithInvalidData_ReturnThroesException() {		
 		var contactDTO = getContactDTO();
+		contactDTO.setIdUser(99L);
 		
-		when(userService.find(1L)).thenThrow(NotFoundException.class);
+		when(userService.find(99L)).thenThrow(NotFoundException.class);
 		
 		assertThrows(NotFoundException.class, () -> contactService.create(contactDTO));
 	}
 
 	@Test
 	void findById_WithValidData_ThenReturnContact() {
+		var contactDTO = getContactDTO();
 		var contactEntity = getContactEntity();
-		
-		String celPhone = "+5511922223333";
-		Long idUser = 1L;
-		
-		var id = UserContactId.builder()
-				.celPhone(celPhone)
-				.idUser(idUser)
-				.build();
-		
-		when(contactRepository.findById(id)).thenReturn(Optional.of(contactEntity));
-		
-		var contact = contactService.find(celPhone, 1L);
-		
+		var userEntity = getUserEntity();
+		userEntity.setId(1L);
+
+		when(userService.find(1L)).thenReturn(userEntity);
+		when(contactRepository.findById(contactEntity.getId())).thenReturn(Optional.of(contactEntity));
+
+		var contact = contactService.find(contactDTO);
+
 		assertEquals(contactEntity, contact);
 	}
-	
+
+	@Test
 	public void findById_WithInvalidData_ThenReturnThorwsWxception() {
-		String celPhone = "+5511922223333";
-		Long idUser = 99L;
-		
-		var id = UserContactId.builder()
-				.celPhone(celPhone)
-				.idUser(idUser)
-				.build();
-		
-		when(contactRepository.findById(id)).thenThrow(NotFoundException.class);
-		
-		assertThrows(NotFoundException.class, () -> contactService.find(celPhone, 99L));
+		var contactDTO = getContactDTO();
+		var contactEntity = getContactEntity();
+		var userEntity = getUserEntity();
+		userEntity.setId(1L);
+
+		when(userService.find(1L)).thenReturn(userEntity);
+		when(contactRepository.findById(contactEntity.getId())).thenThrow(NotFoundException.class);
+
+		assertThrows(NotFoundException.class, () -> contactService.find(contactDTO));
 	}
 
 	@Test
 	void FindAllByUserId_WithValidData_ThenReturnNotNull() {
 		var contactEntity = getContactEntity();
 		
-		when(contactRepository.findAllByUserId(1L)).thenReturn(List.of(contactEntity));
+		when(contactRepository.findAllByIdUserId(1L)).thenReturn(List.of(contactEntity));
 		
 		var contacts = contactService.findAllByUserId(1L);
 		
@@ -104,7 +96,7 @@ public class ContactServiceTest {
 	
 	@Test
 	void FindAllByUserId_WithInvalidData_ThenReturnEmptyList() {
-		when(contactRepository.findAllByUserId(99L)).thenReturn(List.of());
+		when(contactRepository.findAllByIdUserId(99L)).thenReturn(List.of());
 		
 		var contacts = contactService.findAllByUserId(99L);
 		
@@ -114,29 +106,35 @@ public class ContactServiceTest {
 	@Test
 	void updateContact_WithValidData_ThenReturnContact() {
 		var contactDTO = getContactDTO();
+
 		var contactEntity = getContactEntity();
-		
-		var id = UserContactId.builder()
-				.celPhone(contactDTO.getCelPhone())
-				.idUser(contactDTO.getIdUser())
-				.build();
-		
-		when(contactRepository.findById(id)).thenReturn(Optional.of(contactEntity));
+		contactDTO.setName("Teste 2");
+
+		var userEntity = getUserEntity();
+		userEntity.setId(1L);
+
+		when(userService.find(1L)).thenReturn(userEntity);
+
+		when(contactRepository.findById(contactEntity.getId())).thenReturn(Optional.of(contactEntity));
 		when(contactRepository.save(contactEntity)).thenReturn(contactEntity);
 		
 		var contact = contactService.update(contactDTO);
 		
 		assertEquals(contactEntity, contact);
 	}
-	
+
+	@Test
 	public void updateContact_WithInvalidaData_ThenThrows() {
 		var contactDTO = getContactDTO();
-		
-		var id = UserContactId.builder()
-				.celPhone(contactDTO.getCelPhone())
-				.idUser(contactDTO.getIdUser())
-				.build();
-		
+		contactDTO.setCelPhone("+5511999999999");
+
+		var id = getContactEntity().getId();
+		id.setCelPhone("+5511999999999");
+
+		var userEntity = getUserEntity();
+		userEntity.setId(1L);
+
+		when(userService.find(1L)).thenReturn(userEntity);
 		when(contactRepository.findById(id)).thenThrow(NotFoundException.class);
 		
 		assertThrows(NotFoundException.class, () -> contactService.update(contactDTO));

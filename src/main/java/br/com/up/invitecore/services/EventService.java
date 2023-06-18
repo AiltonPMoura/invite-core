@@ -15,13 +15,14 @@ public class EventService {
 
 	@Autowired
 	private EventRepository eventRepository;
+
 	@Autowired
 	private UserService userService;
 
-	public Event create(EventDTO event) {
-		var user = userService.find(event.getIdUser());
+	public Event create(EventDTO eventDTO) {
+		var user = userService.find(eventDTO.getIdUser());
 
-		var eventEntity = event.toEntity();
+		var eventEntity = eventDTO.toEntity();
 		eventEntity.setUser(user);
 
 		return eventRepository.save(eventEntity);
@@ -37,11 +38,11 @@ public class EventService {
 		return eventRepository.findAllByUserId(user.getId());
 	}
 
-	public Event update(EventDTO event, Long id) {
+	public Event update(EventDTO eventDTO, Long id) {
 		var eventEntity = find(id);
 		
-		eventEntity.setName(event.getName());
-		eventEntity.setUriImage(event.getUriImage());
+		eventEntity.setName(eventDTO.getName());
+		eventEntity.setUriImage(eventDTO.getUriImage());
 		
 		return eventRepository.save(eventEntity);
 	}

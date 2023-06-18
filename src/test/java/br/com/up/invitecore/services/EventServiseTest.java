@@ -2,7 +2,6 @@ package br.com.up.invitecore.services;
 
 import br.com.up.invitecore.exceptions.NotFoundException;
 import br.com.up.invitecore.repositories.EventRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,7 +54,6 @@ public class EventServiseTest {
     @Test
     public void findEvent_WithValidaData_ReturnEvent() {
         var eventEntity = getEventEntity();
-        var eventDTO = getEventDTO();
 
         when(eventRepository.findById(1L)).thenReturn(Optional.of(eventEntity));
 
@@ -95,8 +93,6 @@ public class EventServiseTest {
     @Test
     public void updateEvent_WithValidData_ReturnEvent() {
         var eventEntity = getEventEntity();
-        eventEntity.setName("teste 2");
-
         var eventDTO = getEventDTO();
         eventDTO.setName("teste 2");
 
@@ -110,7 +106,6 @@ public class EventServiseTest {
 
     @Test
     public void updateEvent_WithInvalidData_ReturnThrow() {
-        var eventEntity = getEventEntity();
         var eventDTO = getEventDTO();
 
         when(eventRepository.findById(99L)).thenThrow(NotFoundException.class);

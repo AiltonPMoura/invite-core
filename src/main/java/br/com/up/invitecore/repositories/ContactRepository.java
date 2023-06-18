@@ -9,6 +9,6 @@ import br.com.up.invitecore.domains.id.UserContactId;
 
 public interface ContactRepository extends JpaRepository<Contact, UserContactId> {
 
-	List<Contact> findAllByUserId(Long idUser);
+	List<Contact> findAllByIdUserId(Long idUser);
 
 }

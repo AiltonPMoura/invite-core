@@ -1,22 +1,19 @@
 package br.com.up.invitecore.services;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import br.com.up.invitecore.domains.Invite;
 import br.com.up.invitecore.domains.InviteContact;
 import br.com.up.invitecore.domains.id.InviteContactId;
+import br.com.up.invitecore.dto.InviteDTO;
 import br.com.up.invitecore.enumeration.StatusInvite;
 import br.com.up.invitecore.exceptions.NotFoundException;
 import br.com.up.invitecore.repositories.InviteContactRepository;
+import br.com.up.invitecore.repositories.InviteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.up.invitecore.domains.Contact;
-import br.com.up.invitecore.domains.Invite;
-import br.com.up.invitecore.dto.InviteDTO;
-import br.com.up.invitecore.enumeration.TypeInvite;
-import br.com.up.invitecore.repositories.InviteRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InviteService {
@@ -36,31 +33,36 @@ public class InviteService {
 	@Autowired
 	private EventService eventService;
 
-	public Invite create(InviteDTO invite) {
-		var user = userService.find(invite.getIdUser());
-		var event = eventService.find(invite.getEvent().getId());
+	public Invite create(InviteDTO inviteDTO) {
+		var user = userService.find(inviteDTO.getIdUser());
+		var event = eventService.find(inviteDTO.getEventDTO().getId());
 
-		var inviteEntity = invite.toEntity();
+		var inviteEntity = inviteDTO.toEntity();
 		inviteEntity.setUser(user);
 		inviteEntity.setEvent(event);
 		inviteEntity.setDateTime(LocalDateTime.now().withSecond(0).withNano(0));
 
 		var invitePersist = inviteRepository.save(inviteEntity);
-		
-		List<InviteContact> inviteContacts = invite.getContacts().stream()
-				.map(contact -> contactService.find(contact.getCelPhone(), user.getId()))
-				.map(contact -> InviteContact.builder()
+		createInviteContact(inviteDTO, invitePersist);
+
+		return invitePersist;
+	}
+
+	private void createInviteContact(InviteDTO inviteDTO, Invite invitePersist) {
+		List<InviteContact> inviteContacts = inviteDTO.getContacts().stream()
+				.map(contact -> {
+					var contactEntity = contactService.find(contact);
+					return InviteContact.builder()
 						.statusInvite(StatusInvite.PENDING)
 						.id(InviteContactId.builder()
 								.invite(invitePersist)
-								.contact(contact)
+								.contact(contactEntity)
 								.build())
-						.build())
+						.build();
+				})
 				.collect(Collectors.toList());
 
 		inviteContactRepository.saveAll(inviteContacts);
-
-		return invitePersist;
 	}
 
 	public Invite find(Long id) {

@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+import br.com.up.invitecore.domains.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,8 +24,9 @@ public class UserContactId implements Serializable {
 
 	@Column(name = "CEL_PHONE")
 	private String celPhone;
-	
-	@Column(name = "ID_USER")
-	private Long idUser;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "ID_USER")
+	private User user;
+
 }

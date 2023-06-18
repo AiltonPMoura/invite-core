@@ -20,39 +20,40 @@ public class ContactService {
 	@Autowired
 	private UserService userService;
 
-	public Contact create(ContactDTO contact) {
-		var user = userService.find(contact.getIdUser());
-		var contactEntity = contact.toEntity();
+	public Contact create(ContactDTO contactDTO) {
+		var user = userService.find(contactDTO.getIdUser());
 		var id = UserContactId.builder()
-				.celPhone(contact.getCelPhone())
-				.idUser(user.getId())
+				.celPhone(contactDTO.getCelPhone())
+				.user(user)
 				.build();
 
+		var contactEntity = contactDTO.toEntity();
 		contactEntity.setId(id);
-		contactEntity.setUser(user);
 
 		return contactRepository.save(contactEntity);
 	}
 
-	public Contact find(String celPhone, Long idUser) {
+	public Contact find(ContactDTO contactDTO) {
+		var user = userService.find(contactDTO.getIdUser());
+
 		var id = UserContactId.builder()
-				.celPhone(celPhone)
-				.idUser(idUser)
+				.celPhone(contactDTO.getCelPhone())
+				.user(user)
 				.build();
-		
+
 		return contactRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("Contact not found by celPhone and idUser"));
 	}
 
 	public List<Contact> findAllByUserId(Long idUser) {
-		return contactRepository.findAllByUserId(idUser);
+		return contactRepository.findAllByIdUserId(idUser);
 	}
 
-	public Contact update(ContactDTO contact) {
-		var contactEntity = find(contact.getCelPhone(), contact.getIdUser());
+	public Contact update(ContactDTO contactDTO) {
+		var contactEntity = find(contactDTO);
 		
-		contactEntity.setName(contact.getName());
-		contactEntity.setUriImage(contact.getUriImage());
+		contactEntity.setName(contactDTO.getName());
+		contactEntity.setUriImage(contactDTO.getUriImage());
 		
 		return contactRepository.save(contactEntity);
 	}

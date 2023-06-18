@@ -1,31 +1,25 @@
 package br.com.up.invitecore.services;
 
-import br.com.up.invitecore.domains.InviteContact;
 import br.com.up.invitecore.domains.id.InviteContactId;
-import br.com.up.invitecore.enumeration.TypeInvite;
 import br.com.up.invitecore.exceptions.NotFoundException;
-import br.com.up.invitecore.mocks.*;
 import br.com.up.invitecore.repositories.InviteContactRepository;
 import br.com.up.invitecore.repositories.InviteRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static br.com.up.invitecore.mocks.ContactMockBuilder.*;
-import static br.com.up.invitecore.mocks.EventMockBuilder.*;
-import static br.com.up.invitecore.mocks.InviteContactMockBuilder.*;
+import static br.com.up.invitecore.mocks.ContactMockBuilder.getContactDTO;
+import static br.com.up.invitecore.mocks.ContactMockBuilder.getContactEntity;
+import static br.com.up.invitecore.mocks.EventMockBuilder.getEventEntity;
+import static br.com.up.invitecore.mocks.InviteContactMockBuilder.getInviteContactEntity;
 import static br.com.up.invitecore.mocks.InviteMockBuilder.getInviteDTO;
 import static br.com.up.invitecore.mocks.InviteMockBuilder.getInviteEntity;
-import static br.com.up.invitecore.mocks.UserMockBuilder.*;
+import static br.com.up.invitecore.mocks.UserMockBuilder.getUserEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -61,7 +55,7 @@ public class InviteServiceTest {
         var contactDTO = getContactDTO();
         var invateContactEntity = getInviteContactEntity();
 
-        inviteDTO.getEvent().setId(1L);
+        inviteDTO.getEventDTO().setId(1L);
         userEntity.setId(1L);
         inviteEntity.getUser().setId(1L);
         invateContactEntity.setId(InviteContactId.builder()
@@ -71,7 +65,7 @@ public class InviteServiceTest {
 
         when(userService.find(1L)).thenReturn(userEntity);
         when(eventService.find(1L)).thenReturn(eventEntity);
-        when(contactService.find(contactDTO.getCelPhone(), 1L)).thenReturn(contactEntity);
+        when(contactService.find(contactDTO)).thenReturn(contactEntity);
         when(inviteContactRepository.saveAll(List.of(invateContactEntity))).thenReturn(List.of(invateContactEntity));
         when(inviteRepository.save(inviteEntity)).thenReturn(inviteEntity);
 
@@ -83,7 +77,6 @@ public class InviteServiceTest {
     @Test
     public void creteInvite_WithInvalidUserData_ReturnThrow() {
         var inviteDTO = getInviteDTO();
-        var userEntity = getUserEntity();
 
         inviteDTO.setIdUser(99L);
 
@@ -96,7 +89,7 @@ public class InviteServiceTest {
     public void creteInvite_WithInvalidEventrData_ReturnThrow() {
         var inviteDTO = getInviteDTO();
         var userEntity = getUserEntity();
-        inviteDTO.getEvent().setId(99L);
+        inviteDTO.getEventDTO().setId(99L);
 
         when(userService.find(1L)).thenReturn(userEntity);
         when(eventService.find(99L)).thenThrow(NotFoundException.class);
@@ -106,7 +99,6 @@ public class InviteServiceTest {
 
     @Test
     public void findById_WithValidData_ReturnInvite() {
-        var inviteDTO = getInviteDTO();
         var inviteEntity = getInviteEntity();
 
         when(inviteRepository.findById(1L)).thenReturn(Optional.of(inviteEntity));

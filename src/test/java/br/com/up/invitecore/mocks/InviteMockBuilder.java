@@ -1,12 +1,10 @@
 package br.com.up.invitecore.mocks;
 
 import br.com.up.invitecore.domains.Invite;
-import br.com.up.invitecore.dto.EventDTO;
 import br.com.up.invitecore.dto.InviteDTO;
 import br.com.up.invitecore.enumeration.TypeInvite;
 
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjuster;
 import java.util.List;
 
 public class InviteMockBuilder {
@@ -26,7 +24,7 @@ public class InviteMockBuilder {
     public static InviteDTO getInviteDTO() {
         return InviteDTO.builder()
                 .idUser(1L)
-                .event(EventMockBuilder.getEventDTO())
+                .eventDTO(EventMockBuilder.getEventDTO())
                 .location("Local Teste")
                 .type(0)
                 .contacts(List.of(ContactMockBuilder.getContactDTO()))
