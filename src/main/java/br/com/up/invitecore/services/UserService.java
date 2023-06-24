@@ -23,8 +23,8 @@ public class UserService {
 				.orElseThrow(() -> new NotFoundException("User not found by id"));
 	}
 
-	public User update(UserDTO userDTO, Long id) {
-		var userEntity = find(id);
+	public User update(UserDTO userDTO) {
+		var userEntity = find(userDTO.getId());
 		userEntity.setName(userDTO.getName());
 		userEntity.setUriImage(userDTO.getUriImage());
 		return userRepository.save(userEntity);

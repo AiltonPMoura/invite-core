@@ -70,8 +70,8 @@ public class InviteService {
 				.orElseThrow(() -> new NotFoundException("invite not found by id"));
 	}
 
-	public Invite update(InviteDTO invite, Long id) {
-		var inviteEntity = find(id);
+	public Invite update(InviteDTO invite) {
+		var inviteEntity = find(invite.getId());
 		invite.setId(inviteEntity.getId());
 
 		return inviteRepository.save(invite.toEntity());

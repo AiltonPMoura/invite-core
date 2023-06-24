@@ -46,7 +46,8 @@ public class ContactService {
 	}
 
 	public List<Contact> findAllByUserId(Long idUser) {
-		return contactRepository.findAllByIdUserId(idUser);
+		var user = userService.find(idUser);
+		return contactRepository.findAllByIdUserId(user.getId());
 	}
 
 	public Contact update(ContactDTO contactDTO) {

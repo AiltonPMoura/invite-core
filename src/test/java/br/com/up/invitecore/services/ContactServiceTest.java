@@ -56,7 +56,7 @@ public class ContactServiceTest {
 	}
 
 	@Test
-	void findById_WithValidData_ThenReturnContact() {
+	void findById_WithValidData_ReturnContact() {
 		var contactDTO = getContactDTO();
 		var contactEntity = getContactEntity();
 		var userEntity = getUserEntity();
@@ -71,7 +71,7 @@ public class ContactServiceTest {
 	}
 
 	@Test
-	public void findById_WithInvalidData_ThenReturnThorwsWxception() {
+	public void findById_WithInvalidData_ReturnThorwsWxception() {
 		var contactDTO = getContactDTO();
 		var contactEntity = getContactEntity();
 		var userEntity = getUserEntity();
@@ -84,9 +84,12 @@ public class ContactServiceTest {
 	}
 
 	@Test
-	void FindAllByUserId_WithValidData_ThenReturnNotNull() {
+	void FindAllByUserId_WithValidData_ReturnNotNull() {
 		var contactEntity = getContactEntity();
-		
+		var userEntity = getUserEntity();
+		userEntity.setId(1L);
+
+		when(userService.find(1L)).thenReturn(userEntity);
 		when(contactRepository.findAllByIdUserId(1L)).thenReturn(List.of(contactEntity));
 		
 		var contacts = contactService.findAllByUserId(1L);
@@ -95,11 +98,25 @@ public class ContactServiceTest {
 	}
 	
 	@Test
-	void FindAllByUserId_WithInvalidData_ThenReturnEmptyList() {
-		when(contactRepository.findAllByIdUserId(99L)).thenReturn(List.of());
-		
-		var contacts = contactService.findAllByUserId(99L);
-		
+	void FindAllByUserId_WithInvalidUser_ThenReturnEmptyList() {
+		var userEntity = getUserEntity();
+		userEntity.setId(99L);
+
+		when(userService.find(99L)).thenThrow(RuntimeException.class);
+
+		assertThrows(RuntimeException.class, () -> contactService.findAllByUserId(99L));
+	}
+
+	@Test
+	void FindAllByUserId_WithValidUserAndNotValidContact_ThenReturnEmptyList() {
+		var userEntity = getUserEntity();
+		userEntity.setId(1L);
+
+		when(userService.find(1L)).thenReturn(userEntity);
+		when(contactRepository.findAllByIdUserId(1L)).thenReturn(List.of());
+
+		var contacts = contactService.findAllByUserId(1L);
+
 		assertEquals(List.of(), contacts);
 	}
 

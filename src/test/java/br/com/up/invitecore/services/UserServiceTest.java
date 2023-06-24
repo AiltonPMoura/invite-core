@@ -72,12 +72,14 @@ public class UserServiceTest {
 	public void updateUser_WithValidData_ReturnUser() {
 		var userEntity = getUserEntity();
 		var userDTO = getUserDTO();
+
+		userDTO.setId(1L);
 		userDTO.setName("Name 2");
 		
 		when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
 		when(userRepository.save(userEntity)).thenReturn(userEntity);
 		
-		var user = userService.update(userDTO, 1L);
+		var user = userService.update(userDTO);
 		
 		assertEquals(userEntity, user);
 	}
@@ -85,10 +87,11 @@ public class UserServiceTest {
 	@Test
 	public void updateUser_WithInvalidData_ReturnThrowsException() {
 		var userDTO = getUserDTO();
+		userDTO.setId(99L);
 		
 		when(userRepository.findById(99L)).thenThrow(NotFoundException.class);
 		
-		assertThrows(NotFoundException.class, () -> userService.update(userDTO, 99L));
+		assertThrows(NotFoundException.class, () -> userService.update(userDTO));
 		
 	}
 

@@ -38,8 +38,8 @@ public class EventService {
 		return eventRepository.findAllByUserId(user.getId());
 	}
 
-	public Event update(EventDTO eventDTO, Long id) {
-		var eventEntity = find(id);
+	public Event update(EventDTO eventDTO) {
+		var eventEntity = find(eventDTO.getId());
 		
 		eventEntity.setName(eventDTO.getName());
 		eventEntity.setUriImage(eventDTO.getUriImage());

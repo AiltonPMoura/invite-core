@@ -94,12 +94,14 @@ public class EventServiseTest {
     public void updateEvent_WithValidData_ReturnEvent() {
         var eventEntity = getEventEntity();
         var eventDTO = getEventDTO();
+
+        eventDTO.setId(1L);
         eventDTO.setName("teste 2");
 
         when(eventRepository.findById(1L)).thenReturn(Optional.of(eventEntity));
         when(eventRepository.save(eventEntity)).thenReturn(eventEntity);
 
-        var event = eventService.update(eventDTO, 1L);
+        var event = eventService.update(eventDTO);
 
         assertEquals(eventEntity, event);
     }
@@ -107,10 +109,11 @@ public class EventServiseTest {
     @Test
     public void updateEvent_WithInvalidData_ReturnThrow() {
         var eventDTO = getEventDTO();
+        eventDTO.setId(99L);
 
         when(eventRepository.findById(99L)).thenThrow(NotFoundException.class);
 
-        assertThrows(NotFoundException.class, () -> eventService.update(eventDTO, 99L));
+        assertThrows(NotFoundException.class, () -> eventService.update(eventDTO));
     }
 
     @Test
