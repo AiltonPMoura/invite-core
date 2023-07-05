@@ -2,9 +2,10 @@ package br.com.up.invitecore.services;
 
 import br.com.up.invitecore.domains.Invite;
 import br.com.up.invitecore.domains.InviteContact;
+import br.com.up.invitecore.domains.dto.request.InviteRequest;
 import br.com.up.invitecore.domains.id.InviteContactId;
-import br.com.up.invitecore.dto.InviteDTO;
 import br.com.up.invitecore.enumeration.StatusInvite;
+import br.com.up.invitecore.enumeration.TypeInvite;
 import br.com.up.invitecore.exceptions.NotFoundException;
 import br.com.up.invitecore.repositories.InviteContactRepository;
 import br.com.up.invitecore.repositories.InviteRepository;
@@ -33,25 +34,25 @@ public class InviteService {
 	@Autowired
 	private EventService eventService;
 
-	public Invite create(InviteDTO inviteDTO) {
-		var user = userService.find(inviteDTO.getIdUser());
-		var event = eventService.find(inviteDTO.getEventDTO().getId());
+	public Invite create(InviteRequest inviteRequest) {
+		var user = userService.find(inviteRequest.getIdUser());
+		var event = eventService.find(inviteRequest.getIdEvent());
 
-		var inviteEntity = inviteDTO.toEntity();
+		var inviteEntity = inviteRequest.toEntity();
 		inviteEntity.setUser(user);
 		inviteEntity.setEvent(event);
 		inviteEntity.setDateTime(LocalDateTime.now().withSecond(0).withNano(0));
 
 		var invitePersist = inviteRepository.save(inviteEntity);
-		createInviteContact(inviteDTO, invitePersist);
+		createInviteContact(inviteRequest, invitePersist);
 
 		return invitePersist;
 	}
 
-	private void createInviteContact(InviteDTO inviteDTO, Invite invitePersist) {
-		List<InviteContact> inviteContacts = inviteDTO.getContacts().stream()
-				.map(contact -> {
-					var contactEntity = contactService.find(contact);
+	private void createInviteContact(InviteRequest inviteRequest, Invite invitePersist) {
+		List<InviteContact> inviteContacts = inviteRequest.getCelPhoneContacts().stream()
+				.map(celPhone -> {
+					var contactEntity = contactService.find(inviteRequest.getIdUser(), celPhone);
 					return InviteContact.builder()
 						.statusInvite(StatusInvite.PENDING)
 						.id(InviteContactId.builder()
@@ -70,10 +71,11 @@ public class InviteService {
 				.orElseThrow(() -> new NotFoundException("invite not found by id"));
 	}
 
-	public Invite update(InviteDTO invite) {
-		var inviteEntity = find(invite.getId());
-		invite.setId(inviteEntity.getId());
+	public Invite update(Long id, InviteRequest inviteRequest) {
+		var inviteEntity = find(id);
+		inviteEntity.setType(inviteRequest.getType() == 0 ? TypeInvite.FREE : TypeInvite.PAY);
+		inviteEntity.setLocation(inviteRequest.getLocation());
 
-		return inviteRepository.save(invite.toEntity());
+		return inviteRepository.save(inviteRequest.toEntity());
 	}
 }

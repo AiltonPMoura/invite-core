@@ -1,4 +1,4 @@
-package br.com.up.invitecore.dto;
+package br.com.up.invitecore.domains.dto.request;
 
 import br.com.up.invitecore.domains.Invite;
 import br.com.up.invitecore.enumeration.TypeInvite;
@@ -14,14 +14,13 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class InviteDTO {
+public class InviteRequest {
 
-	private Long id;
 	private String location;
 	private Integer type;
 	private Long idUser;
-	private EventDTO eventDTO;
-	private List<ContactDTO> contacts;
+	private Long idEvent;
+	private List<String> celPhoneContacts;
 
 	public Invite toEntity() {
 		var invite = new ModelMapper().map(this, Invite.class);

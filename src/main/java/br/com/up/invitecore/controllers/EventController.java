@@ -1,6 +1,7 @@
 package br.com.up.invitecore.controllers;
 
-import br.com.up.invitecore.dto.EventDTO;
+import br.com.up.invitecore.domains.dto.request.EventRequest;
+import br.com.up.invitecore.domains.dto.response.EventResponse;
 import br.com.up.invitecore.services.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static br.com.up.invitecore.domains.Event.toListDTO;
+import static br.com.up.invitecore.domains.Event.toListResponse;
 
 @RestController
 @RequestMapping("/event")
@@ -29,23 +30,23 @@ public class EventController {
 			tags = {"Event"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "201",
-					content = @Content(schema = @Schema(implementation = EventDTO.class))),
+					content = @Content(schema = @Schema(implementation = EventResponse.class))),
 				@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 				@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
 				@ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
 			}
 	)
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<EventDTO> create(@RequestBody EventDTO event) {
+	public ResponseEntity<EventResponse> create(@RequestBody EventRequest eventRequest) {
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(eventService.create(event).toDTO());
+				.body(eventService.create(eventRequest).toResponse());
 	}
 
 	@Operation(summary = "Find", description = "Find Event By Id",
 			tags = {"Event"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "200",
-						content = @Content(schema = @Schema(implementation = EventDTO.class))),
+						content = @Content(schema = @Schema(implementation = EventResponse.class))),
 				@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
 				@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
 				@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -54,8 +55,8 @@ public class EventController {
 			}
 	)
 	@GetMapping(value = "/{id}", produces = "application/json")
-	public ResponseEntity<EventDTO> find(@PathVariable Long id) {
-		return ResponseEntity.ok(eventService.find(id).toDTO());
+	public ResponseEntity<EventResponse> find(@PathVariable Long id) {
+		return ResponseEntity.ok(eventService.find(id).toResponse());
 	}
 
 	@Operation(summary = "Find All", description = "Find All By User Id",
@@ -64,7 +65,7 @@ public class EventController {
 				@ApiResponse(description = "Success", responseCode = "200",
 					content = @Content(
 							mediaType = "application/json",
-							array = @ArraySchema(schema = @Schema(implementation = EventDTO.class)))
+							array = @ArraySchema(schema = @Schema(implementation = EventResponse.class)))
 				),
 				@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
 				@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
@@ -74,15 +75,15 @@ public class EventController {
 			}
 	)
 	@GetMapping(value = "/user/{idUser}", produces = "application/json")
-	public ResponseEntity<List<EventDTO>> findAll(@PathVariable Long idUser) {
-		return ResponseEntity.ok(toListDTO(eventService.findAll(idUser)));
+	public ResponseEntity<List<EventResponse>> findAll(@PathVariable Long idUser) {
+		return ResponseEntity.ok(toListResponse(eventService.findAll(idUser)));
 	}
 
 	@Operation(summary = "Update", description = "Update Event By Id",
 			tags = {"Event"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "200",
-					content = @Content(schema = @Schema(implementation = EventDTO.class))),
+					content = @Content(schema = @Schema(implementation = EventResponse.class))),
 				@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
 				@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
 				@ApiResponse(description = "Bad Reequest", responseCode = "400", content = @Content),
@@ -92,8 +93,8 @@ public class EventController {
 	)
 	@PutMapping(value = "/{id}",
 			consumes = "application/json", produces = "application/json")
-	public ResponseEntity<EventDTO> update(@RequestBody EventDTO event) {
-		return ResponseEntity.ok(eventService.update(event).toDTO());
+	public ResponseEntity<EventResponse> update(@PathVariable Long id, @RequestBody EventRequest eventRequest) {
+		return ResponseEntity.ok(eventService.update(id, eventRequest).toResponse());
 	}
 
 	@Operation(summary = "Delete", description = "Delete Event By Id",

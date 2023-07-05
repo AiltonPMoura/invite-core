@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 import org.modelmapper.ModelMapper;
 
-import br.com.up.invitecore.dto.UserDTO;
+import br.com.up.invitecore.domains.dto.response.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +37,7 @@ public class User {
 	@Column(name = "URI_IMAGE")
 	private String uriImage;
 	
-	public UserDTO toDTO() {
-		return new ModelMapper().map(this, UserDTO.class);
+	public UserResponse toResponse() {
+		return new ModelMapper().map(this, UserResponse.class);
 	}
 }

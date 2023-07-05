@@ -17,7 +17,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
-import br.com.up.invitecore.dto.EventDTO;
+import br.com.up.invitecore.domains.dto.response.EventResponse;
 import lombok.Data;
 
 @Data
@@ -43,19 +43,19 @@ public class Event {
 	@JoinColumn(name = "ID_USER")
 	private User user;
 	
-	public EventDTO toDTO() {
+	public EventResponse toResponse() {
 		ModelMapper mapper = new ModelMapper();
 		
-		var eventDTO = mapper.map(this, EventDTO.class);
-		eventDTO.setIdUser(this.user.getId());
+		var eventResponse = mapper.map(this, EventResponse.class);
+		eventResponse.setIdUser(this.user.getId());
 		
-		return eventDTO;
+		return eventResponse;
 	}
 	
-	public static List<EventDTO> toListDTO(List<Event> events) {
+	public static List<EventResponse> toListResponse(List<Event> events) {
 		if (events != null)
 			return events.stream()
-					.map(Event::toDTO)
+					.map(Event::toResponse)
 					.collect(Collectors.toList());
 		else 
 			return null;

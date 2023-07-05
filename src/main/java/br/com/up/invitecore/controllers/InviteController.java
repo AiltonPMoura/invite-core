@@ -1,6 +1,7 @@
 package br.com.up.invitecore.controllers;
 
-import br.com.up.invitecore.dto.InviteDTO;
+import br.com.up.invitecore.domains.dto.request.InviteRequest;
+import br.com.up.invitecore.domains.dto.response.InviteResponse;
 import br.com.up.invitecore.services.InviteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,23 +25,23 @@ public class InviteController {
 			tags = {"Invite"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "201",
-						content = @Content(schema = @Schema(implementation = InviteDTO.class))),
+						content = @Content(schema = @Schema(implementation = InviteResponse.class))),
 				@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 				@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
 				@ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
 			}
 	)
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<InviteDTO> create(@RequestBody InviteDTO invite) {
+	public ResponseEntity<InviteResponse> create(@RequestBody InviteRequest inviteRequest) {
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(inviteService.create(invite).toDTO());
+				.body(inviteService.create(inviteRequest).toResponse());
 	}
 
 	@Operation(summary = "Find", description = "Find Invite By Id",
 			tags = {"Invite"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "200",
-					content = @Content(schema = @Schema(implementation = InviteDTO.class))),
+					content = @Content(schema = @Schema(implementation = InviteResponse.class))),
 				@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
 				@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 				@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -48,24 +49,25 @@ public class InviteController {
 			}
 	)
 	@GetMapping(value = "/{id}", produces = "application/json")
-	public ResponseEntity<InviteDTO> find(@PathVariable Long id) {
-		return ResponseEntity.ok(inviteService.find(id).toDTO());
+	public ResponseEntity<InviteResponse> find(@PathVariable Long id) {
+		return ResponseEntity.ok(inviteService.find(id).toResponse());
 	}
 
 	@Operation(summary = "Update", description = "Update Invite By Id",
 			tags = {"Invite"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "200",
-					content = @Content(schema = @Schema(implementation = InviteDTO.class))),
+					content = @Content(schema = @Schema(implementation = InviteResponse.class))),
 				@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
 				@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 				@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
 				@ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
 			}
 	)
-	@PutMapping(consumes = "application/json", produces = "application/json")
-	public InviteDTO update(@RequestBody InviteDTO invite) {
-		return inviteService.update(invite).toDTO();
+	@PutMapping(value = "/{id}",
+			consumes = "application/json", produces = "application/json")
+	public InviteResponse update(@PathVariable Long id, @RequestBody InviteRequest inviteRequest) {
+		return inviteService.update(id, inviteRequest).toResponse();
 	}
 	
 }

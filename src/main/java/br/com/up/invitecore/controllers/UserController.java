@@ -1,6 +1,7 @@
 package br.com.up.invitecore.controllers;
 
-import br.com.up.invitecore.dto.UserDTO;
+import br.com.up.invitecore.domains.dto.request.UserRequest;
+import br.com.up.invitecore.domains.dto.response.UserResponse;
 import br.com.up.invitecore.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +25,7 @@ public class UserController {
 			tags = {"User"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "201",
-					content = @Content(schema = @Schema(implementation = UserDTO.class))
+					content = @Content(schema = @Schema(implementation = UserResponse.class))
 				),
 				@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 				@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -33,16 +34,16 @@ public class UserController {
 			}
 	)
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<UserDTO> create(@RequestBody UserDTO user) {
+	public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(userService.save(user).toDTO());
+				.body(userService.save(userRequest).toResponse());
 	}
 
 	@Operation(summary = "Find ", description = "Find User By Id",
 			tags = {"User"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "200",
-						content = @Content(schema = @Schema(implementation = UserDTO.class))
+						content = @Content(schema = @Schema(implementation = UserResponse.class))
 				),
 				@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
 				@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -52,15 +53,15 @@ public class UserController {
 			}
 	)
 	@GetMapping(value = "/{id}", produces = "application/json")
-	public ResponseEntity<UserDTO> find(@PathVariable Long id) {
-		return ResponseEntity.ok(userService.find(id).toDTO());
+	public ResponseEntity<UserResponse> find(@PathVariable Long id) {
+		return ResponseEntity.ok(userService.find(id).toResponse());
 	}
 
 	@Operation(summary = "Update", description = "Update User By Id",
 			tags = {"User"},
 			responses = {
 				@ApiResponse(description = "Success", responseCode = "200",
-						content = @Content(schema = @Schema(implementation = UserDTO.class))
+						content = @Content(schema = @Schema(implementation = UserResponse.class))
 				),
 				@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
 				@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -69,9 +70,10 @@ public class UserController {
 				@ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
 			}
 	)
-	@PutMapping(consumes = "application/json",produces = "application/json")
-	public ResponseEntity<UserDTO> update(@RequestBody UserDTO user) {
-		return ResponseEntity.ok(userService.update(user).toDTO());
+	@PutMapping(value = "/{id}",
+			consumes = "application/json",produces = "application/json")
+	public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+		return ResponseEntity.ok(userService.update(id, userRequest).toResponse());
 	}
 
 }

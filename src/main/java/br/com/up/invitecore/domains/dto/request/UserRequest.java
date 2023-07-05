@@ -1,20 +1,18 @@
-package br.com.up.invitecore.dto;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.modelmapper.ModelMapper;
+package br.com.up.invitecore.domains.dto.request;
 
 import br.com.up.invitecore.domains.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserRequest {
 	
-	private Long id;
 	private String name;
 	private String celPhone;
 	private String uriImage;

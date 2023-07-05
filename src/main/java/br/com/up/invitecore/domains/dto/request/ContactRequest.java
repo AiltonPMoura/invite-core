@@ -1,20 +1,17 @@
-package br.com.up.invitecore.dto;
-
-import org.modelmapper.ModelMapper;
+package br.com.up.invitecore.domains.dto.request;
 
 import br.com.up.invitecore.domains.Contact;
-import br.com.up.invitecore.domains.User;
-import br.com.up.invitecore.domains.id.UserContactId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContactDTO {
+public class ContactRequest {
 
 	private String name;
 	private String celPhone;

@@ -1,7 +1,7 @@
 package br.com.up.invitecore.domains;
 
 import br.com.up.invitecore.domains.id.UserContactId;
-import br.com.up.invitecore.dto.ContactDTO;
+import br.com.up.invitecore.domains.dto.response.ContactResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,17 +32,17 @@ public class Contact {
 	@Column(name = "URI_IMAGE")
 	private String uriImage;
 
-	public ContactDTO toDTO() {
-		var contact = new ModelMapper().map(this, ContactDTO.class);
+	public ContactResponse toResponse() {
+		var contact = new ModelMapper().map(this, ContactResponse.class);
 		contact.setCelPhone(this.getId().getCelPhone());
 		contact.setIdUser(this.getId().getUser().getId());
 		return contact;
 	}
 	
-	public static List<ContactDTO> toListDTO(List<Contact> contacts) {
+	public static List<ContactResponse> toListResponse(List<Contact> contacts) {
 		if (contacts != null)
 			return contacts.stream()
-					.map(Contact::toDTO)
+					.map(Contact::toResponse)
 					.collect(Collectors.toList());
 		else return null;
 	}
